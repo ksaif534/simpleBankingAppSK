@@ -1,3 +1,13 @@
+<?php
+session_start();
+require_once __DIR__.'/vendor/autoload.php';
+use App\classes\Helpers;
+use App\classes\User;
+use App\classes\File;
+$helpers  = new Helpers();
+$user     = new User(new File(__DIR__.'/src/files/users.txt'));
+$authUser = $user->getAuthenticatedUserBySession();
+?>
 <!DOCTYPE html>
 <html
   class="h-full bg-slate-100"
@@ -48,30 +58,41 @@
       <div
         class="flex flex-col gap-2 mb-8 lg:mb-16 md:flex-row md:justify-center">
         <a
-          href="./login.html"
+          href="login.php"
           type="button"
           class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-          Login as Customer
+          Login
         </a>
 
         <a
-          href="./register.html"
+          href="register.php"
           type="button"
           class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-          Register as Customer
+          Register as Admin/Customer
         </a>
-        <a
-          href="./admin/customers.html"
-          type="button"
-          class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-          Admin View
-        </a>
-        <a
-          href="./customer/dashboard.html"
-          type="button"
-          class="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-          Customer View
-        </a>
+        <?php 
+          if (isset($authUser['role'])) {
+            if ($authUser['role'] == 1) {
+              ?>
+                <a
+                  href="./admin/customers.php"
+                  type="button"
+                  class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
+                  Admin View
+                </a>
+              <?php
+            }else{
+              ?>
+                <a
+                  href="./customer/dashboard.php"
+                  type="button"
+                  class="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
+                  Customer View
+                </a>
+              <?php
+            }
+          }
+        ?>
       </div>
     </section>
   </body>

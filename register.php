@@ -1,3 +1,14 @@
+<?php
+session_start();
+require_once __DIR__.'/vendor/autoload.php';
+use App\classes\Auth;
+use App\classes\Helpers;
+use App\classes\User;
+use App\classes\File;
+$auth = new Auth(new Helpers(),[],new User(new File(__DIR__.'/src/files/users.txt')));
+$auth->register();
+?>
+
 <!DOCTYPE html>
 <html
   class="h-full bg-white"
@@ -31,19 +42,26 @@
     <title>Create A New Account</title>
   </head>
   <body class="h-full bg-slate-100">
-    <div class="flex flex-col justify-center min-h-full py-12 sm:px-6 lg:px-8">
+    <div class="flex flex-col justify-center min-h-full py-6 sm:px-6 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <h2
-          class="mt-6 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900">
+          class="mt-3 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900">
           Create A New Account
         </h2>
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
         <div class="px-6 py-12 bg-white shadow sm:rounded-lg sm:px-12">
+          <?php
+            $msg = $auth->getHelpers()->flash('error');
+            if ($msg) : ?>
+              <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4" role="alert">
+                  <span class="font-bold"><?= $msg; ?></span>
+              </div>
+          <?php endif; ?>
           <form
             class="space-y-6"
-            action="#"
+            action="register.php"
             method="POST">
             <div>
               <label
@@ -56,11 +74,17 @@
                   id="name"
                   name="name"
                   type="text"
-                  required
+                  novalidate
                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
               </div>
             </div>
-
+            <?php
+              $nameErr = $auth->getHelpers()->flash('name');
+              if ($nameErr) : ?>
+                <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4" role="alert">
+                    <span class="font-bold"><?= $nameErr; ?></span>
+                </div>
+            <?php endif; ?>
             <div>
               <label
                 for="email"
@@ -72,12 +96,17 @@
                   id="email"
                   name="email"
                   type="email"
-                  autocomplete="email"
-                  required
+                  novalidate
                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
               </div>
             </div>
-
+            <?php
+              $emailErr = $auth->getHelpers()->flash('email');
+              if ($emailErr) : ?>
+                <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4" role="alert">
+                    <span class="font-bold"><?= $emailErr; ?></span>
+                </div>
+            <?php endif; ?>
             <div>
               <label
                 for="password"
@@ -89,9 +118,54 @@
                   id="password"
                   name="password"
                   type="password"
-                  autocomplete="current-password"
-                  required
+                  novalidate
                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
+              </div>
+            </div>
+            <?php
+              $passErr = $auth->getHelpers()->flash('password');
+              if ($passErr) : ?>
+                <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4" role="alert">
+                    <span class="font-bold"><?= $passErr; ?></span>
+                </div>
+            <?php endif; ?>
+            <div>
+              <label
+                for="confirm_password"
+                class="block text-sm font-medium leading-6 text-gray-900"
+                >Confirm Password</label
+              >
+              <div class="mt-2">
+                <input
+                  id="confirm_password"
+                  name="confirm_password"
+                  type="password"
+                  novalidate
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
+              </div>
+            </div>
+            <?php
+              $confirmPass = $auth->getHelpers()->flash('confirm_password');
+              if ($confirmPass) : ?>
+                <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4" role="alert">
+                    <span class="font-bold"><?= $confirmPass; ?></span>
+                </div>
+            <?php endif; ?>
+            <div>
+              <label 
+              for="role"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Role
+              </label>
+              <div class="mt-2">
+                <select 
+                name="role" 
+                id="role"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2"
+                >
+                  <option value="2">User</option>
+                </select>
               </div>
             </div>
 
