@@ -2,10 +2,6 @@
 
 BanguBank is a simple banking application with features for both 'Admin' and 'Customer' users. It's a HTML template starter pack for Laravel Career Path by Interactive Cares students.
 
-![Admin View](screenshots/admin_preview.png)
-
-![Customer View](screenshots/customers_preview.png)
-
 # Admin Cli Registration Guideline
 
 1. go to `admin` directory and run `php cli.php create-admin` to run the cli script to create an admin account.
