@@ -1,1 +1,0 @@
-a:4:{s:4:"name";s:10:"Saif Kamal";s:5:"email";s:28:"kamal.saifkamal534@gmail.com";s:8:"password";s:60:"$2y$10$5va2HL2O5cKXnzIOnUfJQOgRT/T5d.h9312aaUMqWi4c94lidBOYa";s:4:"role";i:1;}
