@@ -1,3 +1,16 @@
+<?php
+session_start();
+require_once __DIR__.'/../vendor/autoload.php';
+$requestUri = $_SERVER['REQUEST_URI'];
+use App\classes\Transaction;
+use App\classes\User;
+use App\classes\File;
+use App\classes\Helpers;
+$transaction  = new Transaction(new File(__DIR__.'/../src/files/transactions.txt'),new User(new File(__DIR__.'/../src/files/users.txt')),[],new Helpers());
+$transactions = $transaction->getTransactionsByUser($requestUri);
+$email        = $transaction->fetchEmail($transaction->fetchWildCardArr($transaction->fetchWildCard($requestUri))); 
+?>
+
 <!DOCTYPE html>
 <html
   class="h-full bg-gray-100"
@@ -35,7 +48,7 @@
       }
     </style>
 
-    <title>Transactions of Al Nahian</title>
+    <title>Transactions of <?php echo $transactions[0]['receiver_name'] ?></title>
   </head>
   <body class="h-full">
     <div class="min-h-full">
@@ -51,12 +64,12 @@
                   <div class="flex space-x-4">
                     <!-- Current: "bg-sky-700 text-white", Default: "text-white hover:bg-sky-500 hover:bg-opacity-75" -->
                     <a
-                      href="./customers.html"
+                      href="../../customers.php"
                       class="text-white hover:bg-sky-500 hover:bg-opacity-75 rounded-md py-2 px-3 text-sm font-medium"
                       >Customers</a
                     >
                     <a
-                      href="./transactions.html"
+                      href="../../transactions.php"
                       class="text-white hover:bg-sky-500 hover:bg-opacity-75 rounded-md py-2 px-3 text-sm font-medium"
                       >Transactions</a
                     >
@@ -100,7 +113,7 @@
                     aria-labelledby="user-menu-button"
                     tabindex="-1">
                     <a
-                      href="#"
+                      href="../../../logout.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                       tabindex="-1"
@@ -224,7 +237,7 @@
         <header class="py-10">
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold tracking-tight text-white">
-              Transactions of Al Nahian
+              Transactions of <?php echo $transactions[0]['receiver_name'] ?>
             </h1>
           </div>
         </header>
@@ -238,7 +251,7 @@
               <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
                   <p class="mt-2 text-sm text-gray-700">
-                    List of transactions made by Al Nahian.
+                    List of transactions made by <?php echo $transactions[0]['receiver_name'] ?>.
                   </p>
                 </div>
               </div>
@@ -249,6 +262,11 @@
                     <table class="min-w-full divide-y divide-gray-300">
                       <thead>
                         <tr>
+                          <th
+                            scope="col"
+                            class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                            Sender Name
+                          </th>
                           <th
                             scope="col"
                             class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
@@ -272,98 +290,65 @@
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
-                            Bruce Wayne
-                          </td>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
-                            bruce@wayne.com
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm font-medium text-emerald-600">
-                            +$10,240
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                            29 Sep 2023, 09:25 AM
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
-                            Al Nahian
-                          </td>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
-                            alnahian@2003.com
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm font-medium text-red-600">
-                            -$2,500
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                            15 Sep 2023, 06:14 PM
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
-                            Muhammad Alp Arslan
-                          </td>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
-                            alp@arslan.com
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm font-medium text-emerald-600">
-                            +$49,556
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                            03 Jul 2023, 12:55 AM
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
-                            Povilas Korop
-                          </td>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
-                            povilas@korop.com
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm font-medium text-emerald-600">
-                            +$6,125
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                            07 Jun 2023, 10:00 PM
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
-                            Martin Joo
-                          </td>
-                          <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
-                            martin@joo.com
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm font-medium text-red-600">
-                            -$125
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                            02 Feb 2023, 8:30 PM
-                          </td>
-                        </tr>
+                        <?php
+                          foreach ($transactions as $trans) {
+                            ?>
+                              <tr>
+                                <td
+                                  class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
+                                  <?php echo $trans['sender_name'] ?>
+                                </td>
+                                <td
+                                  class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
+                                  <?php echo $trans['receiver_name'] ?>
+                                </td>
+                                <td
+                                  class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
+                                  <?php echo $trans['receiver_email'] ?>
+                                </td>
+                                <?php 
+                                  if ($trans['amount'] < 0) {
+                                    if ($trans['receiver_email'] == $email && $trans['type'] == 3) {
+                                      ?>
+                                        <td
+                                          class="whitespace-nowrap px-2 py-4 text-sm font-medium text-emerald-600">
+                                          <?php echo $trans['amount'] * -1 . '$' ?>
+                                        </td>
+                                      <?php
+                                    }else{
+                                      ?>
+                                        <td
+                                          class="whitespace-nowrap px-2 py-4 text-sm font-medium text-red-600">
+                                          <?php echo $trans['amount'] . '$' ?>
+                                        </td>
+                                      <?php
+                                    }
+                                  }else{
+                                    if ($trans['receiver_email'] == $email && $trans['type'] == 3) {
+                                      ?>
+                                        <td
+                                          class="whitespace-nowrap px-2 py-4 text-sm font-medium text-red-600">
+                                          <?php echo $trans['amount'] * -1 . '$' ?>
+                                        </td>
+                                      <?php
+                                    }else{
+                                      ?>
+                                        <td
+                                          class="whitespace-nowrap px-2 py-4 text-sm font-medium text-emerald-600">
+                                          <?php echo $trans['amount'] . '$' ?>
+                                        </td>
+                                      <?php
+                                    }
+                                  }
+                                ?>
+                                <td
+                                  class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
+                                  <?php echo $trans['date'] ?>
+                                </td>
+                              </tr>
+                            <?php
+                          }
+                        ?>
                       </tbody>
                     </table>
                   </div>
